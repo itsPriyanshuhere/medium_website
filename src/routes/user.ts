@@ -30,7 +30,9 @@ userRouter.post('/signup', async (c) => {
 
     const jwt = await sign({ id: user.id}, c.env.JWT_SECRET);
 
-    return c.json({message: jwt});
+    c.header('Authorization', `${jwt}`)
+
+    return c.json({ message: 'Signup successful', token: jwt });
   }
   catch(e){
     c.status(403);
@@ -66,29 +68,15 @@ userRouter.post('/signin', async (c) => {
 
     const jwt = await sign({id: user.id},c.env.JWT_SECRET);
 
-    return c.text(jwt);
+    c.header('Authorization', `${jwt}`);
+
+    return c.json({ message: 'Signin successful', token: jwt });
   }
   catch(e){
     c.status(411);
     return c.json({message: "Some error occured: wrong creds"});
   }
 
-})
-
-userRouter.get('/blog', (c) => {
-  return c.text('Hello Hono!')
-})
-
-userRouter.put('/blog', (c) => {
-  return c.text('Hello Hono!')
-})
-
-userRouter.get('/blog/:id', (c) => {
-  return c.text('Hello Hono!')
-})
-
-userRouter.get('/blog/bulk', (c) => {
-  return c.text('Hello Hono!')
 })
 
 export default userRouter;
